@@ -1,0 +1,34 @@
+---
+title: "Leaflet package test"
+author: "avkch"
+date: "31 January 2017"
+output: html_document
+---
+
+## Leaflet package test
+
+This is an R Markdown and Leaflet Peer-graded Assignment for Coursera Developing Data Products course.
+On the map are shown all Hilton hotels in London with  links to their webpages.
+
+```{r echo = FALSE }
+library(leaflet)
+# reading the row data from the dataset
+HiltonsLondon <- read.csv("https://raw.githubusercontent.com/avkch/Leaflet_test/master/HiltonsLondon.csv", header = FALSE)
+# makes new data.frame with only the data that will be used.
+hiltons <- HiltonsLondon[,c(1, 2, 8, 10, 11)] 
+# put names to the columns
+colnames(hiltons) <- c("ID", "name", "webaddress", "lat", "long")
+# adds new column "pop" with the html code for the links
+hiltons$pop <- paste0("<a href='",hiltons$webaddress, "'>", hiltons$name, "</a>")
+```
+
+
+
+```{r pressure, echo=FALSE}
+# makes leaflet map
+map <- leaflet() %>% 
+    addTiles() %>%
+    addMarkers(lng = hiltons$long, lat = hiltons$lat, popup=hiltons$pop, clusterOptions = markerClusterOptions())
+map
+
+```
